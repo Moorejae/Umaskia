@@ -11,24 +11,29 @@ import {
   Layers,
   Palette,
   Compass,
+  Play,
+  Terminal,
 } from 'lucide-react';
 
 interface SkillInspectorPanelProps {
   skill: WebsiteSkill;
   onOpenAiExpand: (skill: WebsiteSkill) => void;
   onExportSingleSkillToDoc: (skill: WebsiteSkill) => void;
+  onOpenLiveMotionDemo?: () => void;
 }
 
-type InspectorTab = 'all' | 'ux' | 'design' | 'engineering' | 'markdown';
+type InspectorTab = 'all' | 'ux' | 'design' | 'engineering' | 'templates' | 'markdown';
 
 export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
   skill,
   onOpenAiExpand,
   onExportSingleSkillToDoc,
+  onOpenLiveMotionDemo,
 }) => {
   const [activeTab, setActiveTab] = useState<InspectorTab>('all');
   const [copiedMarkdown, setCopiedMarkdown] = useState(false);
   const [copiedYaml, setCopiedYaml] = useState(false);
+  const [copiedTemplateIdx, setCopiedTemplateIdx] = useState<number | null>(null);
 
   const fullMarkdown = compileSkillToMarkdown(skill);
 
@@ -42,6 +47,12 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
     await navigator.clipboard.writeText(skill.yamlFrontmatter);
     setCopiedYaml(true);
     setTimeout(() => setCopiedYaml(false), 1800);
+  };
+
+  const handleCopyTemplate = async (code: string, idx: number) => {
+    await navigator.clipboard.writeText(code);
+    setCopiedTemplateIdx(idx);
+    setTimeout(() => setCopiedTemplateIdx(null), 1800);
   };
 
   const handleDownloadSkillMd = () => {
@@ -81,7 +92,18 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
           </div>
 
           {/* Action Toolbar */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {skill.hasLiveMotionDemo && onOpenLiveMotionDemo && (
+              <button
+                type="button"
+                onClick={onOpenLiveMotionDemo}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              >
+                <Play className="w-3.5 h-3.5" />
+                <span>Launch SELENE Motion Sandbox</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => onOpenAiExpand(skill)}
@@ -167,7 +189,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
-            <span>Complete Tri-Layer Spec</span>
+            <span>Complete Spec</span>
           </button>
 
           <button
@@ -180,7 +202,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>01. UX & Conversion</span>
+            <span>01. UX & Motion Flow</span>
           </button>
 
           <button
@@ -208,6 +230,21 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
             <Code2 className="w-3.5 h-3.5" />
             <span>03. Engineering & SEO</span>
           </button>
+
+          {skill.codeTemplates && skill.codeTemplates.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('templates')}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                activeTab === 'templates'
+                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>04. Motion Engine Code ({skill.codeTemplates.length})</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -275,7 +312,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
             {(activeTab === 'all' || activeTab === 'ux') && (
               <section className="pt-4 border-t border-slate-200 dark:border-slate-800">
                 <h2 className="text-base font-bold text-slate-900 dark:text-white mb-4">
-                  01. UX Architecture & Conversion Funnel Blueprint
+                  01. UX Architecture & Scroll / Conversion Blueprint
                 </h2>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -310,7 +347,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
                           <th className="py-2.5 px-4 w-12 font-mono tabular-nums">#</th>
                           <th className="py-2.5 px-4 w-1/4">Section Name</th>
                           <th className="py-2.5 px-4 w-1/3">Strategic Purpose</th>
-                          <th className="py-2.5 px-4">Mandatory UI & Content Elements</th>
+                          <th className="py-2.5 px-4">Mandatory UI & Motion Mechanics</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
@@ -510,7 +547,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
                   {/* API Routes */}
                   <div className="border border-slate-200 dark:border-slate-800 rounded-lg p-4">
                     <h3 className="text-xs font-semibold text-slate-900 dark:text-white mb-3">
-                      Full-Stack API Endpoints
+                      Runtime & Asset Pipelines
                     </h3>
                     <ul className="space-y-2 text-xs font-mono text-slate-700 dark:text-slate-300">
                       {skill.engineeringSpec.apiEndpointsAndIntegrations.map((api) => (
@@ -525,7 +562,7 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
                 {/* SEO & JSON-LD */}
                 <div className="p-4 bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-lg mb-6">
                   <div className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">
-                    Technical SEO & Schema.org JSON-LD Structured Data
+                    Technical SEO, Asset Preloading & Schema.org JSON-LD
                   </div>
                   <p className="text-xs font-mono text-slate-800 dark:text-slate-200 leading-relaxed">
                     {skill.engineeringSpec.seoAndJsonLdSchema}
@@ -550,6 +587,74 @@ export const SkillInspectorPanel: React.FC<SkillInspectorPanelProps> = ({
                 </div>
               </section>
             )}
+
+            {/* LAYER 4: Load-Bearing Motion Engine & Reusable Reference Code Templates */}
+            {skill.codeTemplates &&
+              skill.codeTemplates.length > 0 &&
+              (activeTab === 'all' || activeTab === 'templates') && (
+                <section className="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-5">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                        04. Load-Bearing Motion Engine & Reusable Code Templates
+                      </h2>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        Included automatically in the SKILL.md export and Unified Master Google Doc so AI agents can replicate the single-rAF Lenis loop, 6-layer parallax stage, horizontal reel, and SVG path follower.
+                      </p>
+                    </div>
+                    {skill.hasLiveMotionDemo && onOpenLiveMotionDemo && (
+                      <button
+                        type="button"
+                        onClick={onOpenLiveMotionDemo}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-md cursor-pointer"
+                      >
+                        <Play className="w-3.5 h-3.5" />
+                        <span>Test Live SELENE Motion Stages</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    {skill.codeTemplates.map((tpl, idx) => (
+                      <div
+                        key={tpl.filename}
+                        className="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden"
+                      >
+                        <div className="px-4 py-2.5 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
+                          <div>
+                            <span className="text-xs font-mono font-semibold text-slate-900 dark:text-white">
+                              {tpl.filename}
+                            </span>
+                            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                              {tpl.description}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyTemplate(tpl.code, idx)}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded hover:border-blue-500 cursor-pointer shrink-0"
+                          >
+                            {copiedTemplateIdx === idx ? (
+                              <>
+                                <Check className="w-3 h-3 text-emerald-500" />
+                                <span>Copied</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3 h-3" />
+                                <span>Copy Code</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        <pre className="p-4 bg-slate-950 text-slate-100 text-xs font-mono leading-relaxed overflow-x-auto">
+                          {tpl.code}
+                        </pre>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
           </>
         )}
       </div>

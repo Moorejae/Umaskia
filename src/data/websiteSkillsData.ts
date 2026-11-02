@@ -18,6 +18,7 @@ export const MACRO_CATEGORIES = [
   'Community, Social & Events',
   'Non-Profit, Civic & Institutional',
   'Interactive 3D, WebGL & Casual Games',
+  'Cinematic Scrollytelling & Motion Websites',
 ] as const;
 
 export function compileSkillToMarkdown(skill: WebsiteSkill): string {
@@ -113,7 +114,16 @@ ${skill.engineeringSpec.seoAndJsonLdSchema}
 ---
 
 ## Domain Anti-Slop Bans & Verification Guardrails
-${antiPatternList}
+${antiPatternList}${
+    skill.codeTemplates && skill.codeTemplates.length > 0
+      ? `\n\n---\n\n## Layer 4: Load-Bearing Motion Engine & Reusable Reference Code Templates\n\n${skill.codeTemplates
+          .map(
+            (tpl) =>
+              `### File: \`${tpl.filename}\`\n> ${tpl.description}\n\n\`\`\`tsx\n${tpl.code.trim()}\n\`\`\``
+          )
+          .join('\n\n')}`
+      : ''
+  }
 `;
 }
 
@@ -1775,6 +1785,319 @@ target_conversion_metric: "Session Engagement Duration, Configuration Save Rate 
       'Never trap a 3D scene or web game inside a tiny 400px box surrounded by generic SaaS marketing text.',
       'Never cover the center of the 3D viewport or game board with opaque persistent banners.',
       'Never omit `requestAnimationFrame` cleanup and window resize handlers.',
+    ],
+  },
+  {
+    id: 'skill-17-cinematic-scrollytelling-motion',
+    slug: 'cinematic-scrollytelling-motion-website',
+    indexNumber: '17',
+    name: 'Cinematic Scrollytelling, Multi-Plane Parallax & Scroll-Choreographed Motion Website',
+    category: 'Cinematic Scrollytelling & Motion Websites',
+    subArchetypes: [
+      'Aerospace, Lunar & Deep-Space Expedition (SELENE Archetype)',
+      'Deep-Sea Submersible & Oceanographic Expedition',
+      'Hypercar, EV & Autonomous Mobility Reveal',
+      'Haute Horology & Mechanical Caliber Unveil',
+      'Alpine Mountaineering & Extreme Gear Story',
+      'Architectural Skyscraper & Cultural Monument Launch',
+    ],
+    summary:
+      'Teaches AI agents to build zero-re-render, 60fps scroll-choreographed cinematic websites driven by a single requestAnimationFrame + Lenis loop, 6-plane alpha-cut photographic parallax stages, focal-line horizontal film reels, and scroll-inked SVG trajectory paths.',
+    hasLiveMotionDemo: true,
+    yamlFrontmatter: `---
+name: "cinematic-scrollytelling-motion-website"
+description: >
+  Master specification for building cinematic scrollytelling and scroll-choreographed
+  motion websites (modeled on the SELENE Lunar Expedition architecture). Enforces a single
+  requestAnimationFrame loop advancing Lenis with direct ref style mutations (zero React
+  useState re-renders during scroll), 6-layer alpha-cut photographic depth stages with
+  desktop/mobile responsive cuts, focal-weighted horizontal film reels, scroll-inked SVG
+  trajectories with getPointAtLength follower capsules, and corner-bracket telemetry HUDs.
+triggers:
+  - "motion website, scrollytelling, parallax website, cinematic launch, Lenis scroll, SELENE, earthrise, interactive story, expedition site"
+target_conversion_metric: "100% Scroll Story Completion & Manifest / Waitlist Reservation Rate"
+---`,
+    uxConversionFlow: {
+      primaryGoal:
+        'Transform vertical scrolling into a continuous, 60fps physical camera move through depth planes, horizontal reels, and vector trajectories—culminating in a high-intent manifest/reservation capture.',
+      aboveTheFoldArchitecture:
+        'Fixed Minimal Hull Header (Brand Mark + Widely Tracked Wordmark `tracking-[0.36em]` — 4 Mono Anchor Links + 1 High-Contrast Reserve Button) over a Pinned `440svh` (`sticky top-0 h-[100svh]`) 6-Plane Depth Stage that opens behind a Canvas Particle Veil ("Scroll to clear the dust") and parts to reveal the rising subject, mid-plane tracked Hero Title, foreground silhouette, and Corner-Bracket Telemetry HUD.',
+      sectionSequence: [
+        {
+          sectionName: 'Pinned 6-Plane Photographic Parallax Hero Stage (`STAGE_VH = 440svh`)',
+          purpose: 'Create true cinema-grade z-depth without heavy WebGL or video buffering by sliding 6 alpha-cut layers past one another at distinct scroll velocities.',
+          requiredElements:
+            '`0.00–0.18`: Canvas dust particle veil clears upward (`translate3d` + `scale`). `0.04–0.50`: Primary background subject (e.g. Earth / Peak / Vessel) rises from behind the mid-plane horizon (`easeOutCubic`). `0.08–0.24`: Widely tracked Display Title resolves between planes (`letterSpacing: 0.6em -> 0.24em`, `blur(10px -> 0px)`). `0.28–0.62`: Foreground framing rim (`scale(1.6 -> 1.0)`), silhouette subject, and ground plane rise into place. `0.70–1.00`: Ground layer with an attached `110vh` solid `#05070c` apron climbs to swallow the frame cleanly into the next section.',
+        },
+        {
+          sectionName: 'Pinned Horizontal Film-Reel Log (`SECTION_VH = 340svh`)',
+          purpose: 'Present a chronological sequence of chapters or stills that slides sideways with vertical scroll while dynamically focusing the frame nearest the optical focal line.',
+          requiredElements:
+            'Left sticky 32vw narrative column with live `01 / 04` counter and `scaleX(k)` progress bar + Right horizontal `<ol>` track translating by `-k * travel`. Each card calculates its distance `off` from `vw * 0.62`: the nearest card renders at `opacity: 1, scale: 1`, while peripheral cards dim (`1 - a * 0.55`) and shrink (`1 - a * 0.07`), with inner `<img>` counter-panning (`translate3d(${off * -60}px, 0, 0) scale(1.15)`).',
+        },
+        {
+          sectionName: 'Scroll-Inked Multi-Leg SVG Trajectory (`SECTION_VH = 380svh`)',
+          purpose: 'Draw a physical route, engineering process, or expedition path directly from scroll progress rather than a passive timer.',
+          requiredElements:
+            'Pinned `1200x600` SVG stage with ghost dashed paths (`strokeOpacity="0.08"`) overlaid by inked paths (`pathLength={1}`, `strokeDasharray="1 1"`, `strokeDashoffset={1 - k}`). A rider/capsule `<g>` follows the active leg via `path.getPointAtLength(path.getTotalLength() * k)`, while a tabular counter ticks up total distance/output and a bottom bar transitions between leg descriptions.',
+        },
+        {
+          sectionName: 'Generative SVG Orbit-Ring Tier / Mission Cards',
+          purpose: 'Encode package duration, complexity, or tier depth visually using procedural SVG geometry.',
+          requiredElements:
+            '3-column tier grid (`[data-reveal]` staggered entrance) where each card renders procedural SVG elliptical rings proportional to its duration (`Math.ceil(days / 7)`), a large tabular duration/price figure, bulleted inclusions, and a deep-link CTA that pre-selects that tier in the reservation form below.',
+        },
+        {
+          sectionName: 'Bookended Horizon Glow & Live Countdown Manifest Form',
+          purpose: 'Close the narrative arc with a visual echo of the hero and capture committed reservations.',
+          requiredElements:
+            'Radial atmospheric glow at the bottom viewport edge bookending the hero + 2-column split: Left column features a 1Hz live launch-window countdown (`Days · Hrs · Min · Sec`) framed in `.brackets`; Right column houses a strict manifest form (`Name`, `Email`, `Selected Tier`) with native validity checking and instant status feedback.',
+        },
+      ],
+      conversionPsychology: [
+        'Zero Mid-Scroll Jank = Trust: Updating transforms and text nodes directly inside a single rAF loop keeps frame times under 4ms, making the product feel engineered like aerospace hardware.',
+        'Physical Scroll Agency: Because the user’s scroll wheel directly clears the dust, raises the horizon, and inks the trajectory, engagement completion exceeds 85%.',
+        'Pre-Populated Manifest Handoff: Clicking any tier card scrolls smoothly via Lenis and pre-selects that exact tier in the reservation `<select>` input.',
+      ],
+    },
+    designSystem: {
+      aestheticDirection:
+        'Engineered Aerospace & Deep-Void Telemetry — deep vacuum blacks (`#05070c`), regolith silver-grays (`#c9ccd3`), sunlit parchment highlights (`#f2e6c9`), hull-stenciled wide display typography (`Michroma`), and 1px corner-bracket HUD overlays.',
+      colorPalette: {
+        dominantCanvas60: '#05070c (--color-void: Deep Space / Abyssal Black)',
+        structuralSurface30: '#0b0f18 (--color-void-2: Card & Panel Surface) with rgba(255,255,255,0.10) 1px rings',
+        accentBudget10: '#6fb6ff (--color-earth: Atmospheric Horizon Cyan) + #f2e6c9 (--color-sunlit: Trajectory Gold)',
+        semanticTokens: 'Primary Text #c9ccd3 (--color-regolith) · Muted Telemetry #8b909b (--color-dust) · Invalid Ring #f87171',
+      },
+      typography: {
+        displayFont: 'Michroma (wide engineered caps, tracked out `0.24em`–`0.50em` like hull stenciling; always pair wide tracking with negative `marginRight` optical compensation)',
+        bodyFont: 'Manrope (300–700 weight, clean geometric legibility against dark void surfaces)',
+        monoFont: 'IBM Plex Mono (400/500, `0.6875rem` uppercase with `0.16em` letter-spacing for telemetry clocks, coordinates, and HUD readouts)',
+        scaleAndMeasure: 'Hero `--text-hero: clamp(2.25rem, 8.6vw, 9rem)` (`letter-spacing: 0.24em`) · Section `--text-display: clamp(1.75rem, 4vw, 3.75rem)` · Body `clamp(0.9375rem, 1.05vw, 1.0625rem)`',
+      },
+      spatialMathAndGrid:
+        'Use `100svh` (`.h-screen-s`) for all sticky pinned viewports to avoid mobile browser bar jumps. Set `overflow-x: clip` on `body` and `history.scrollRestoration = "manual"` in `main.tsx`. Always provide both desktop (`d/`, `min-width: 768px`) and mobile (`m/`, `max-width: 767px`) layer cuts sharing a unified `object-cover` registration.',
+    },
+    engineeringSpec: {
+      componentHierarchy: [
+        'src/lib/scroll.ts (Singleton Lenis instance + single rAF loop `onFrame` pub/sub + `scrollToHash`)',
+        'src/lib/math.ts (`clamp`, `lerp`, `range`, `easeOutCubic`, `pinProgress(el)`)',
+        'src/hooks/useReducedMotion.ts & src/hooks/useReveals.ts (prefers-reduced-motion media listener + IntersectionObserver `[data-reveal]` trigger)',
+        'Earthrise.tsx (440svh pinned 6-layer parallax stage + 2D canvas dust motes + telemetry HUD)',
+        'MissionLog.tsx (340svh pinned horizontal focal-line reel with inner-image counter-parallax)',
+        'Trajectory.tsx (380svh pinned SVG multi-leg path inker using `getPointAtLength` capsule tracking)',
+        'Missions.tsx & Reserve.tsx (procedural SVG orbit-ring cards + 1Hz launch countdown + manifest form)',
+      ],
+      stateAndDataEntities: [
+        'PinMetrics { p: number (0..1 clamped progress), rect: DOMRect, vh: number }',
+        'LayerName = "sky" | "earth" | "moonscape" | "frame" | "astronaut" | "ground"',
+        'Mote { x: number, y: number, r: number, s: number, a: number } (Canvas dust particle)',
+        'TrajectoryLeg { day: string, title: string, body: string, svgPathD: string }',
+      ],
+      apiEndpointsAndIntegrations: [
+        'Client-side deterministic rAF loop (zero network latency during scroll)',
+        'Preloaded responsive `<picture>` WebP layer assets (`/layers/d/*.webp` and `/layers/m/*.webp`)',
+        'Manifest submission handler (`mailto:` draft or `POST /api/manifest/reserve` waitlist endpoint)',
+      ],
+      seoAndJsonLdSchema:
+        'Preload primary background layer (`<link rel="preload" as="image" href="/layers/d/sky.webp" media="(min-width: 768px)" fetchpriority="high" />`), set `<meta name="theme-color" content="#05070c" />`, and include Schema.org `Event` or `Product` JSON-LD.',
+    },
+    antiPatterns: [
+      'NEVER call React `useState` setters on every scroll tick—all continuous scroll transforms, opacities, and telemetry counters MUST write directly to DOM refs (`el.style.transform`, `el.textContent`) inside `onFrame`.',
+      'NEVER combine multiple competing scroll/animation libraries (do not mix GSAP ScrollTrigger + Framer Motion + Lenis); run ONE `requestAnimationFrame` loop that steps Lenis and notifies `onFrame` subscribers.',
+      'NEVER forget negative right margin (`marginRight: "-0.24em"`) on centered text with wide `letter-spacing`, otherwise centered headings appear optically shifted to the left.',
+      'NEVER omit the `prefers-reduced-motion: reduce` branch in `startScroll(reduced)` and particle loops.',
+      'NEVER allow horizontal scrollbar overflow at 390px, 768px, 1280px, or 1920px viewports (`overflow-x: clip`).',
+    ],
+    codeTemplates: [
+      {
+        filename: 'src/lib/math.ts',
+        description:
+          'Pure arithmetic primitives for pinned scroll progress (`pinProgress`), sub-window range normalization (`range`), linear interpolation (`lerp`), and cubic easing.',
+        code: `export const clamp = (v: number, min = 0, max = 1) =>
+  Math.min(max, Math.max(min, v));
+
+export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+/** Maps value v from [a, b] into clamped [0, 1] progress. */
+export const range = (v: number, a: number, b: number) =>
+  clamp((v - a) / (b - a));
+
+export const easeOutCubic = (t: number) => 1 - Math.pow(1 - clamp(t), 3);
+
+/**
+ * Computes normalized 0..1 scroll progress for a sticky-pinned section
+ * whose total height is > 100svh.
+ */
+export function pinProgress(el: HTMLElement) {
+  const rect = el.getBoundingClientRect();
+  const vh = window.innerHeight;
+  const travel = Math.max(1, rect.height - vh);
+  const p = clamp(-rect.top / travel);
+  return { p, rect, vh };
+}`,
+      },
+      {
+        filename: 'src/lib/scroll.ts',
+        description:
+          'Single requestAnimationFrame loop that advances Lenis smooth scroll and dispatches frame timestamps to all scroll-driven components with zero React state overhead.',
+        code: `import Lenis from 'lenis';
+
+type FrameCallback = (time: number) => void;
+
+const listeners = new Set<FrameCallback>();
+let lenisInstance: Lenis | null = null;
+
+export function onFrame(cb: FrameCallback): () => void {
+  listeners.add(cb);
+  return () => {
+    listeners.delete(cb);
+  };
+}
+
+export function scrollToHash(hash: string) {
+  const target = document.querySelector<HTMLElement>(hash);
+  if (!target) return;
+  if (lenisInstance) {
+    lenisInstance.scrollTo(target, { duration: 1.4 });
+  } else {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+export function startScroll(reducedMotion: boolean): () => void {
+  const lenis = reducedMotion
+    ? null
+    : new Lenis({
+        lerp: 0.085,
+        smoothWheel: true,
+      });
+  lenisInstance = lenis;
+
+  let rafId = 0;
+  const tick = (time: number) => {
+    lenis?.raf(time);
+    listeners.forEach((fn) => fn(time));
+    rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+
+  return () => {
+    cancelAnimationFrame(rafId);
+    lenis?.destroy();
+    if (lenisInstance === lenis) lenisInstance = null;
+  };
+}`,
+      },
+      {
+        filename: 'src/hooks/useReducedMotion.ts & src/hooks/useReveals.ts',
+        description:
+          'Accessibility hook for prefers-reduced-motion and IntersectionObserver hook that toggles `.is-in` on `[data-reveal]` elements.',
+        code: `import { useEffect, useRef, useState } from 'react';
+
+export function useReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== 'undefined'
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return reduced;
+}
+
+export function useReveals<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const targets = root.querySelectorAll<HTMLElement>('[data-reveal]');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    targets.forEach((t) => io.observe(t));
+    return () => io.disconnect();
+  }, []);
+
+  return ref;
+}`,
+      },
+      {
+        filename: 'src/components/Earthrise.tsx (6-Plane Pinned Parallax Stage)',
+        description:
+          'Stacked 6-layer photographic parallax stage with seeded 2D canvas dust veil, mid-plane tracked title reveal, corner-bracket HUD clock, and black apron curtain transition.',
+        code: `// Scroll-Window Choreography inside onFrame((time) => ...):
+// 0.00 - 0.18: Dust veil clears upward
+const veil = 1 - range(p, 0, 0.18);
+const exit = range(p, 0.7, 1);
+const settle = easeOutCubic(range(p, 0, 0.5));
+
+// Far -> Near layers moving at distinct rates:
+set('sky', lerp(0, -6, p), lerp(1.14, 1, settle));
+const rise = easeOutCubic(range(p, 0.04, 0.5));
+set('earth', lerp(34, 0, rise) - exit * 12, lerp(0.92, 1, rise));
+set('moonscape', lerp(9, 0, settle) - exit * 26);
+const rim = easeOutCubic(range(p, 0.28, 0.58));
+set('frame', -exit * 44, lerp(1.6, 1, rim), rim);
+const up = easeOutCubic(range(p, 0.36, 0.62));
+set('astronaut', lerp(28, 0, up) - exit * 58, 1, clamp(up * 2));
+const ground = easeOutCubic(range(p, 0.34, 0.6));
+set('ground', lerp(36, 0, ground) - exit * 78);
+
+// Mid-plane Title tracking condensation & blur clearing:
+const tIn = easeOutCubic(range(p, 0.08, 0.24));
+const tOut = range(p, 0.42, 0.52);
+title.style.opacity = String(tIn * (1 - tOut));
+title.style.letterSpacing = \`\${lerp(0.6, 0.24, tIn)}em\`;
+title.style.transform = \`translate3d(0, \${-p * 6}vh, 0)\`;
+title.style.filter = tIn < 0.99 ? \`blur(\${(1 - tIn) * 10}px)\` : '';`,
+      },
+      {
+        filename: 'src/components/MissionLog.tsx & Trajectory.tsx (Horizontal Reel & SVG Path Inker)',
+        description:
+          'Focal-weighted horizontal film reel with inner-image counter-parallax and multi-leg SVG path drawing using `getPointAtLength`.',
+        code: `// 1. Horizontal Reel Focal Proximity & Counter-Parallax:
+const vw = window.innerWidth;
+const k = range(p, 0.04, 0.96);
+const travel = Math.max(0, track.offsetLeft + track.scrollWidth - vw * 0.94);
+track.style.transform = \`translate3d(\${-k * travel}px, 0, 0)\`;
+
+cardRefs.current.forEach((card, i) => {
+  const r = card.getBoundingClientRect();
+  const off = (r.left + r.width / 2 - vw * 0.62) / vw; // focus line right of centre
+  const a = clamp(Math.abs(off) * 1.6);
+  card.style.opacity = String(1 - a * 0.55);
+  card.style.transform = \`scale(\${1 - a * 0.07})\`;
+  imgRefs.current[i].style.transform = \`translate3d(\${off * -60}px, 0, 0) scale(1.15)\`;
+});
+
+// 2. Scroll-Inked SVG Trajectory & Capsule Follower:
+const u = range(p, 0.06, 0.92) * LEGS.length;
+const s = clamp(Math.floor(u), 0, LEGS.length - 1);
+legRefs.current.forEach((path, i) => {
+  const legProgress = easeOutCubic(clamp(u - i));
+  path.style.strokeDashoffset = String(1 - legProgress);
+  if (i === s) {
+    const pt = path.getPointAtLength(path.getTotalLength() * legProgress);
+    capsuleRef.current!.setAttribute('transform', \`translate(\${pt.x} \${pt.y})\`);
+  }
+});`,
+      },
     ],
   },
 ];

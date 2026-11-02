@@ -15,6 +15,7 @@ import {
 import { SkillInspectorPanel } from './components/SkillInspectorPanel';
 import { AiSkillSynthesizerModal } from './components/AiSkillSynthesizerModal';
 import { GoogleDocsExportModal } from './components/GoogleDocsExportModal';
+import { SeleneMotionPreviewModal } from './components/SeleneMotionPreviewModal';
 import { GoogleSignInButton } from './components/GoogleSignInButton';
 import {
   Search,
@@ -25,12 +26,14 @@ import {
   Sun,
   Moon,
   RotateCcw,
+  Play,
 } from 'lucide-react';
 
 export default function App() {
   const [skills, setSkills] = useState<WebsiteSkill[]>(INITIAL_WEBSITE_SKILLS);
+  // Default to the newly added Cinematic Scrollytelling & Motion Website skill (Skill 17)
   const [selectedSkillId, setSelectedSkillId] = useState<string>(
-    INITIAL_WEBSITE_SKILLS[0].id
+    'skill-17-cinematic-scrollytelling-motion'
   );
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] =
@@ -53,6 +56,8 @@ export default function App() {
   const [isDocModalOpen, setIsDocModalOpen] = useState(false);
   const [singleSkillForDoc, setSingleSkillForDoc] =
     useState<WebsiteSkill | null>(null);
+
+  const [isMotionDemoOpen, setIsMotionDemoOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = initAuth(
@@ -202,7 +207,7 @@ export default function App() {
           SkillFoundry
         </a>
 
-        {/* Zone 2: 4 concise single-line navigation links */}
+        {/* Zone 2: 5 concise single-line navigation links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
           <button
             type="button"
@@ -213,6 +218,16 @@ export default function App() {
             className="hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             Skill Catalog
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedSkillId('skill-17-cinematic-scrollytelling-motion');
+              setIsMotionDemoOpen(true);
+            }}
+            className="hover:text-slate-900 dark:hover:text-white hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+          >
+            SELENE Motion Sandbox
           </button>
           <button
             type="button"
@@ -278,11 +293,19 @@ export default function App() {
             </span>
             <div>
               <span className="text-slate-500 dark:text-slate-400">
-                Spec Architecture:{' '}
+                Motion Engine:{' '}
               </span>
-              <span className="font-medium text-slate-900 dark:text-white">
-                YAML + UX + Design + Full-Stack Code
-              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSkillId('skill-17-cinematic-scrollytelling-motion');
+                  setIsMotionDemoOpen(true);
+                }}
+                className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+              >
+                <Play className="w-3 h-3" />
+                <span>SELENE 6-Layer Scrollytelling Included</span>
+              </button>
             </div>
             {syncHistory.length > 0 && (
               <>
@@ -369,7 +392,7 @@ export default function App() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search 80+ website types (e.g. SaaS, clinic, store)..."
+                placeholder="Search 86+ website types (e.g. motion, SaaS, store)..."
                 className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-md text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:border-blue-600"
               />
             </div>
@@ -464,7 +487,7 @@ export default function App() {
               Unified Master Google Doc
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-              Export all {skills.length} website-building SKILL.md blueprints into a single indexed Google Doc for your AI agents.
+              Export all {skills.length} website-building SKILL.md blueprints (including the SELENE Motion Engine) into a single indexed Google Doc.
             </p>
             <button
               type="button"
@@ -484,6 +507,7 @@ export default function App() {
               skill={activeSkill}
               onOpenAiExpand={handleOpenExpandSkillModal}
               onExportSingleSkillToDoc={handleOpenSingleSkillDocModal}
+              onOpenLiveMotionDemo={() => setIsMotionDemoOpen(true)}
             />
           )}
         </section>
@@ -521,6 +545,12 @@ export default function App() {
         onSyncSuccess={(record) => {
           setSyncHistory((prev) => [record, ...prev]);
         }}
+      />
+
+      {/* Live SELENE Motion Engine Interactive Sandbox Modal */}
+      <SeleneMotionPreviewModal
+        isOpen={isMotionDemoOpen}
+        onClose={() => setIsMotionDemoOpen(false)}
       />
     </div>
   );

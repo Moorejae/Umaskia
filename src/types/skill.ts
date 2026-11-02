@@ -39,6 +39,12 @@ export interface SkillEngineeringSpec {
   seoAndJsonLdSchema: string;
 }
 
+export interface SkillCodeTemplate {
+  filename: string;
+  description: string;
+  code: string;
+}
+
 export interface WebsiteSkill {
   id: string;
   slug: string;
@@ -52,6 +58,8 @@ export interface WebsiteSkill {
   designSystem: SkillDesignSystem;
   engineeringSpec: SkillEngineeringSpec;
   antiPatterns: string[];
+  codeTemplates?: SkillCodeTemplate[];
+  hasLiveMotionDemo?: boolean;
   isCustom?: boolean;
   updatedAt?: string;
 }
