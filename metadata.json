@@ -1,0 +1,6 @@
+{
+  "name": "SkillFoundry — Agentic Website Building Skills & Google Docs Exporter",
+  "description": "Universal repository and AI synthesizer of production-grade SKILL.md blueprints covering every website archetype in existence, with one-click export to a unified Master Google Doc.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
